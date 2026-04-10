@@ -21,27 +21,27 @@ jobs:
         shell: bash
         run: |
           set -e
-
+      
           BASE_REF="${{ github.event.pull_request.base.sha }}"
           HEAD_REF="${{ github.event.pull_request.head.sha }}"
-
+      
           echo "Comparing $BASE_REF..$HEAD_REF"
-
+      
           git diff --name-only "$BASE_REF" "$HEAD_REF" > changed_files.txt
-
+      
           echo "Changed files:"
-          cat changed_files.txt
-
-          # Filter Dockerfiles
-          grep -E '(^|/)Dockerfile(\..*)?$' changed_files.txt || true > dockerfiles.txt
-
-          # Filter Compose files
-          grep -E '(docker-compose\.ya?ml|compose\.ya?ml)$' changed_files.txt || true > composefiles.txt
-
-          echo "Dockerfiles:"
+          cat changed_files.txt || true
+      
+          # Dockerfiles
+          awk '/(^|\/)Dockerfile(\..*)?$/' changed_files.txt > dockerfiles.txt || true
+      
+          # Compose files
+          awk '/(docker-compose\.ya?ml|compose\.ya?ml)$/' changed_files.txt > composefiles.txt || true
+      
+          echo "--- Dockerfiles ---"
           cat dockerfiles.txt || true
-
-          echo "Compose files:"
+      
+          echo "--- Compose files ---"
           cat composefiles.txt || true
 
       - name: Build changed Dockerfiles (no cache)
