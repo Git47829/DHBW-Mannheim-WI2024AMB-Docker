@@ -2,7 +2,10 @@ FROM golang:latest AS builder
 
 WORKDIR /app
 
-RUN go mod init
+RUN go mod init calculator
+
+COPY go.mod go.sum ./
+RUN go mod download
 
 COPY main.go ./
 
@@ -16,4 +19,4 @@ EXPOSE 8090
 
 USER nonroot:nonroot
 
-CMD ["/esc-points-converter"]
+CMD ["/go-api"]

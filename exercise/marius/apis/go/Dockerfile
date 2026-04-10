@@ -18,4 +18,5 @@ EXPOSE 8090
 
 USER nonroot:nonroot
 
-CMD ["/esc-points-converter"]
+CMD ["/go-api"]
+
